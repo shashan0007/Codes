@@ -1,0 +1,39 @@
+In Java 8 a Function Descriptor is a term used to describe the signature of the abstract method of a Functional Interface
+. The signature of the abstract method of a Functional Interface is syntactically the same as the signature of the Lambda Expression
+. Hence, a Function Descriptor also describes the signature of a lambda.
+
+Example 1: Lets say we have a functional interface named FirstInterface. It’s described as below –
+
+Example 1 - FirstInterface.java
+package com.javabrahman.java8;
+@FunctionalInterface
+public interface FirstInterface {
+  //Single abstract method
+  public void singleMethod(String param);
+}
+For the above interface, named FirstInterface, the signature of the abstract method OR the function descriptor is (String) -> void
+
+
+Example 2: Functional Interface SecondInterface.java has a slight variation of the abstract method –
+
+Example 2 - SecondInterface.java
+package com.javabrahman.java8;
+@FunctionalInterface
+public interface SecondInterface {
+  //Single abstract method
+  public long computeSum(int num1, int num2);
+}
+For SecondInterface the function descriptor is (int,int) -> long
+
+Example 4: Lets see an example of a generic type based in-built functional interface named Function<T, R> introduced in Java 8 –
+
+Example 4 - In-built java.util.function.Function<T, R>
+@FunctionalInterface
+public interface Function<T, R> {
+    /**
+     * Applies this function to the given argument.
+     * @param t the function argument
+     * @return the function result of type R
+     */
+    R apply(T t);
+The function descriptor for Function<T, R> will be T -> R
