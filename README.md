@@ -1,1 +1,1 @@
-# com.ashish.
+# Repository location for practice codes #
