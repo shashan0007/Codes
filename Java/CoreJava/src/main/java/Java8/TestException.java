@@ -1,4 +1,4 @@
-package Java8;
+package Corejava;
 import java.io.IOException;
 public class TestException {
 	

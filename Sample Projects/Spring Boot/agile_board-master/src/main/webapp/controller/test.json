@@ -1,0 +1,21 @@
+[{"Id":1,
+"scrum":"Scrum1",
+"ScrumStories":[{
+  "sprint":1,
+ "SprintStories":[{
+		"title":"UserStory1",
+		"ScrumStory":[	{"story":"story1","Date":"17-04-2017","Status":"Opened"},
+		{"story":"story2","Date":"18-04-2017","Status":"Opened"},
+					{"story":"story3","Date":"17-04-2017","Status":"InProgress"},{"story":"story4","Date":"18-04-2017","Status":"InProgress"},
+					{"story":"story5","Date":"17-04-2017","Status":"Complete"},{"story":"story6","Date":"18-04-2017","Status":"Complete"}
+				]
+	  }
+,{
+		"title":"UserStory2",
+		"ScrumStory":[	{"story":"story1","Date":"17-04-2017","Status":"Opened"},{"story":"story2","Date":"18-04-2017","Status":"Opened"},
+					{"story":"story3","Date":"17-04-2017","Status":"InProgress"},{"story":"story4","Date":"18-04-2017","Status":"InProgress"},
+					{"story":"story5","Date":"17-04-2017","Status":"Complete"},{"story":"story6","Date":"18-04-2017","Status":"Complete"}
+				]
+}]
+}]
+}]

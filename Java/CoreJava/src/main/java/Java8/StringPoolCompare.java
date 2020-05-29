@@ -1,4 +1,4 @@
-package Java8;
+package Corejava;
 
 public class StringPoolCompare {
 

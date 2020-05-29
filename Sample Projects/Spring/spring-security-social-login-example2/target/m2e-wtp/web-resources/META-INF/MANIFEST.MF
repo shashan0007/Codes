@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: spring-security-social-login-example
+Implementation-Version: 1.0-SNAPSHOT
+Built-By: lpt-2049
+Implementation-Vendor-Id: com.spring.security.social.login.example
+Build-Jdk: 1.8.0_202
+Implementation-URL: http://projects.spring.io/spring-boot/spring-secur
+ ity-social-login-example/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+

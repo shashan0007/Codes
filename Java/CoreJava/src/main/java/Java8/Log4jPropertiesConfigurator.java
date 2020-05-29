@@ -1,4 +1,4 @@
-package Java8;
+package Corejava;
 
 import java.io.FileInputStream;
 import java.io.IOException;

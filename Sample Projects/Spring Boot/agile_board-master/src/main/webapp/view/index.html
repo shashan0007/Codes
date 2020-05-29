@@ -1,0 +1,390 @@
+<html ng-app="app">
+	<head>
+		<!------------ Style Sheet------------------------------->
+		<link href="./../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="./../bootstrap/css/custom.css" rel="stylesheet">
+		<script src="./../jquery.js"></script>
+		<script src="./../angular.min.js"></script>
+		<script src="./../bootstrap/js/bootstrap.min.js"></script>
+		<script src="./../ngDraggable.js"></script>
+		<script src="./../model/Model.js"></script>
+		<script src="./../controller/Controller.js"></script>
+		<script src="./../controller/app.js"></script>
+		<script src="./../controller/login.js"></script>
+		
+		
+		<!---#eb8024--->
+	</head>
+	<body ng-controller="controller" ng-init="init()">
+		<!--------------Navbar start----------------------------->
+		<!-- Fixed navbar -->
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+		  <div class="container">
+			<div class="navbar-header">
+			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </button>
+			  <a class="navbar-brand" href="http://localhost:8080/view/index.html?Id=1">Virtual Scrumboard</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse pull-right">
+			  <ul class="nav navbar-nav">
+				<li><a href="">Welcome {{currUser}}</a></li>
+				<!--  li><a ng-click="LogoutUser()">Logout</a></li > -->
+				<!--<li class="active"><a href="#">Home</a></li>
+				<li class="active"><a href="#about" >About</a></li>--->
+			  </ul>
+			</div><!--/.nav-collapse -->
+		  </div>
+		</nav>
+		<!--------------Navbar closed----------------------------->
+		<!--------------Main Content Start------------------------>
+		<div class="container theme-showcase" role="main" id="main-container">
+			<div class="jumbotron">
+				<!-------table start----------------------------->
+				<div class="page-header">
+					<h4>Scrumboard</h4>
+				</div>
+				<div class="row">
+				<div class="col-md-2">
+					 <div class="form-group">
+						<select class="col-md-6 form-control" ng-model="SelectedScrum" ng-options="value for (key, value) in listItems" ng-change="scrumChanged()">
+							<option value="">Select Scrum</option>
+						</select>
+					</div>
+					</div>
+					<div class="col-md-4">
+						<form class="form-inline">
+						  <div class="form-group">
+							<input type="text" ng-model="NewScrum" class="form-control" placeholder="Add New Scrum">
+						  </div>
+						  <button type="submit" ng-click="AddScrum()" class="btn btn-default">submit</button>
+						</form>
+					</div>
+					<div class="col-md-2">
+					<div class="form-group">
+						<select class="col-md-6 form-control" ng-model="SelectedSprint" ng-options="value for (key,value) in sprintlistItems | orderBy: key" ng-change="sprintChanged()">
+						<option value="">Select Sprint</option>
+						</select>
+					</div>
+					</div>
+					<div class="col-md-4">
+					<form class="form-inline">
+						  <div class="form-group">
+							<input type="text" ng-model="NewSprint" class="form-control" placeholder="Add New Sprint">
+						  </div>
+						  <button type="submit" ng-click="AddSprint()" class="btn btn-default">submit</button>
+					</form>
+					</div>
+					
+				</div>
+				<div class="row marginTop5px">
+					<div class="col-md-12" >
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="col-md-3">User Story</th>
+									<th class="col-md-3">Opened</th>
+									<th class="col-md-3">In Progress</th>	
+									<th class="col-md-3">Complete</th>	
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-model="selectedSprintStory" ng-repeat="(key,value) in sprintstories" ng-class="{'bg-danger': (value.status == 'Blocked'),'bg-warning': (value.status == 'In Progress'),'bg-info': (value.status == 'New'),'bg-success': (value.status == 'Complete')}" >
+									<td  class="col-md-3">
+										<p ng-dblclick="editTodo(value)">	
+											<a ng-click="DeleteScrumStory(value)" class="pull-right">[X]</a>
+											<span class="editable" ng-hide="value.editing" style="font-size: 14px;">{{value.title}}</span>
+											<form ng-submit="doneEditing(value.editing)" ng-show="value.editing">
+												<input class="editable col-md-12" ng-model="value.title">
+												<button class="btn btn-default" ng-click="userStoryBlocked(value,BlockUS)">
+     												<img src="tick.jpg" width="12" />
+												</button>
+												<button class="btn btn-default" ng-click="cancel()">
+     												<img src="cancel.jpg" width="12" />
+												</button>
+											</form>
+											</p>										
+									</td>
+									<td class="col-md-3" id="div1" ondrop="drop(event, 'Opened')" ondragover="allowDrop(event)">
+									<!-- Button trigger modal -->
+									<button type="button" class="btn btn-primary btn-xs pull-right" data-target="#USModal" ng-click="openTask(value.Id)" data-toggle="modal">
+									  +
+									</button>
+									<div class="clearfix"></div>
+									<div>
+											<ul class="ulStyle" >
+												<li class="liStyle" ng-repeat="(key,obj) in value.ScrumStory" id="{{obj.story}}" name="{{value.Id}}" draggable="true" ondragstart="drag(event)" ng-if="obj.Status == 'Opened'">
+												 	<div class="padding5" style="background-color:#FDDCBB">
+															<a ng-click="DeleteTasks(obj)" class="pull-right">[X]</a>
+													</div>
+												 	<div class="padding5" style="background-color:#FDDCBB" data-target="#EditTaskModal" data-toggle="modal" ng-click="editTask(obj)">
+														<div class="clearfix"></div>
+														<div class="border1Dotted" style="height:40px;font-size:12px">{{obj.description}}</div>
+														<div>{{obj.Date}} / {{obj.Owner}}</div>
+													</div>
+												</li>
+											</ul>
+										</div>
+									</td>
+									<td class="col-md-3" id="div2" ondrop="drop(event, 'In Progress')" ondragover="allowDrop(event)">
+							
+										<div>
+											<ul class="ulStyle">
+													<li class="liStyle" draggable="true" ondragstart="drag(event)" ng-repeat="(key,obj) in value.ScrumStory" id="{{obj.story}}" name="{{value.Id}}" ng-if="obj.Status == 'In Progress'">
+														<div class="padding5" style="background-color:#FDDCBB">
+															<a ng-click="DeleteTasks(obj)" class="pull-right">[X]</a>
+														</div>
+														<div class="padding5" style="background-color:#FDDCBB" data-target="#EditTaskModal" data-toggle="modal" ng-click="editTask(obj)">
+															<div class="clearfix"></div>
+															<div class="border1Dotted" style="height:40px;font-size:12px">{{obj.description}}</div>
+															<div>{{obj.Date}} / {{obj.Owner}}</div>
+														</div>
+													</li>
+													<li class="liStyle" draggable="true" ondragstart="drag(event)" ng-repeat="(key,obj) in value.ScrumStory" id="{{obj.story}}" name="{{obj.Status}}" ng-if="obj.Status == 'Blocked'">
+														<div class="padding5" style="background-color:#F9A1B7">
+															<a ng-click="DeleteTasks(obj)" class="pull-right">[X]</a>
+														</div>
+														<div class="padding5" style="background-color:#F9A1B7" data-target="#EditTaskModal" data-toggle="modal" ng-click="editTask(obj)">
+															<div class="clearfix"></div>
+															<div class="border1Dotted" style="height:40px;font-size:12px">{{obj.description}}</div>
+															<div>{{obj.Date}} / {{obj.Owner}}</div>
+														</div>
+													</li>
+											</ul>
+										</div>
+									</td>
+									<td class="col-md-3" id="div3" ondrop="drop(event,'Complete')" ondragover="allowDrop(event)">
+										<div>
+											<ul class="ulStyle">
+													<li class="liStyle" ng-repeat="obj in value.ScrumStory" ng-if="obj.Status == 'Complete'">
+														<div class="padding5" style="background-color:#81D7B8">
+															<div>
+																<span class="glyphicon glyphicon-ok pull-right text-success" aria-hidden="true"></span>
+															</div>
+															<div class="clearfix"></div>
+															<div class="border1Dotted" style="height:40px;font-size:12px;background-color:#81D7B8" data-target="#SavedTaskModal" data-toggle="modal" ng-click="editTask(obj)">{{obj.description}}</div>
+															<div style="background-color:#81D7B8">{{obj.Date}} / {{obj.Owner}}</div>
+														</div>
+													</li>
+											</ul>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						
+						<a ng-click="Showme=true" >Add Scrum Story</a>
+						<form ng-show="Showme">
+							<input type="text" name="AddStory" ng-model="AddStory">
+							<input type="button" value="save" ng-click="AddScrumStory()">
+							<a ng-click="Showme=false" >Hide</a>
+						
+						</form>
+				
+						
+					</div>
+				</div>
+			<!-----------------table ends-------------------------------->
+			</div>
+		</div>
+		<!--------------Main Content Ends------------------------>
+		<!--------------Footer------------------------------>
+		
+		<!-- Modal -->
+<!-------Modal start----------------------------->
+				<div class="modal fade" data-keyboard="false" data-backdrop="static" id="USModal" role="dialog">
+					<div class="modal-dialog modal-sm">
+						<div class="modal-content">
+							<div class="modal-header modal-header-success">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"> Add A New Task </h4>					
+							</div>
+							<div class="modal-body"> 
+									<form class="form-horizontal" name="frm" novalidate>
+										<!-- text area to write user story -->
+										<textarea id="task1New" name="task1" ng-model="Tasks.task1" placeholder="describe the user task" rows="5" cols="30" style="width:254px" autocomplete="off" required> 
+										
+										</textarea>									
+										<span id="newSpan" class="text-danger col-md-12 msg" ng-show="frm.task1.$error.required && frm.task1.$touched" >Please enter the task description </span>
+										
+									</form>
+							</div>
+							<div class="modal-footer">
+							
+							<form name="frm2">
+								<div class="row">
+									<div class="col-md-12">
+									<div class="form-group">
+										<select name="assignTo" id="assignToNew" class=" form-control" ng-model="Tasks.UserList" ng-options="y for (x,y) in Users" required>
+											<option value="">Assign to</option>
+										</select>
+			
+										<!-- not working -->
+										<span class="text-danger col-md-13 msg" ng-show="frm2.assignTo.$error.required && frm2.assignTo.$touched" >Please select task owner </span>
+										</div>
+									</div>
+								<div class="clearfix"></div>
+								<div class="col-md-12"> 
+								<div class="form-group">
+									<input type="date" id ="dateNew" name="date" class="form-control" ng-model="Tasks.actdate" max="2020-12-31" autocomplete="off" required>
+									<span class="text-danger col-md-12 msg" ng-show="frm2.date.$error.required && frm2.date.$touched" >Please select a date </span>
+									<span class="text-danger col-md-12 msg" ng-show="frm2.date.$touched && frm2.date.$error.date">Not a valid date!</span>
+									<span class="text-danger col-md-12 msg" ng-show="frm2.date.$touched && frm2.date.$error.max">Date beyond range!</span>
+								</div>
+								</div>
+								</div>
+								<div class="row">
+								<div class="col-md-4 col-md-offset-4">
+									<button type="button" class="btn btn-warning btn-block" ng-click="saveTask()"> Save </button>
+				
+								</div>
+								</div>
+							</div>
+							</form>
+							
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-----------------Modal ends------------------------------------------>
+				
+				<!-------SavedTaskModal starts------------------------------------------>
+			 	
+			 	<div class="modal fade" data-keyboard="false" data-backdrop="static" id="SavedTaskModal" role="dialog">
+					<div class="modal-dialog modal-sm">
+						<div class="modal-content">
+							<div class="modal-header modal-header-success">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"> Task Description </h4>					
+							</div>
+							<div class="modal-body"> 
+									<form class="form-horizontal" name="frm9" novalidate>
+										<!-- text area to write user story -->
+										 <textarea id="taskdesc" name="taskdesc" ng-model="EditTaskObj.taskdesc" 
+										 rows="5" cols="30" style="width:254px" readonly> 
+											{{EditTaskObj.taskdesc}}
+										</textarea>	
+									</form>								
+							</div>
+							<div class="modal-footer">
+							<form name="frm7">
+								<div>
+									<div class="pull-right dropdown dropdown-scroll ">
+										<div id="ownerdone" class="col-md-6" style="height: 20px; width: 156px;">{{EditTaskObj.owner}} / Completed on {{EditTaskObj.date}}</div>
+										<br>
+									</div> 
+								</div>
+								</form>
+								<br>
+							</div>
+					</div>
+					</div>
+				</div> 
+					
+				<!-------SavedTaskModal ends------------------------------------------>	
+				
+				<!-------EditTaskModal starts------------------------------------------>
+			 	<div class="modal fade" data-keyboard="false" data-backdrop="static" id="EditTaskModal" role="dialog">
+					<div class="modal-dialog modal-sm">
+						<div class="modal-content">
+							<div class="modal-header modal-header-success">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"> Edit the Task </h4>					
+							</div>
+							<div class="modal-body"> 
+									<form class="form-horizontal" name="frm3" novalidate>
+										<!-- text area to write user story -->
+										 <textarea id="taskdesc" name="taskdesc" ng-model="EditTaskObj.taskdesc" placeholder="describe the user task" 
+										 rows="5" cols="30" style="width:254px" autocomplete="off" required> 
+											{{EditTaskObj.taskdesc}}
+										</textarea>									
+										<span class="text-danger col-md-12 msg" ng-show="frm3.taskdesc.$error.required && frm3.taskdesc.$touched" >
+										Please enter the task description </span>
+									</form>
+							</div>
+							<div class="modal-footer">
+							<form name="frm4">
+								<div>
+									<div class="pull-right dropdown dropdown-scroll ">
+										<select name="owner" id="owner"  class="col-md-6" style="height: 20px; width: 156px;" ng-model="EditTaskObj.owner" ng-options="y for (x,y) in Users" required > 
+											<option value="{{EditTaskObj.owner}}">Assign To</option>
+										</select>
+										<br>
+										
+										<span class="text-danger col-md-13 msg" ng-show="frm4.owner.$error.required && frm4.owner.$touched" >Please select task owner </span>
+									</div> 
+								</div> 
+								<br>
+								<div>
+									<div class="pull-right dropdown dropdown-scroll ">
+										<select name="status" id="status"  class="col-md-6" style="height: 20px; width: 156px;" ng-model="EditTaskObj.status" ng-options="y for (x,y) in USstatus" ng-if="EditTaskObj.status != 'Opened'" > 
+											<option value="{{EditTaskObj.status}}">Select Status</option>
+										</select>
+										<br>						
+									</div> 
+								</div> 
+								<br>
+								
+								
+								
+							 	<div> 
+									<label for="date">ETA Date:</label>
+									<input type="date" id ="date2" name="date2" ng-model="EditTaskObj.actdate" max="2020-12-31" value ="previousdate" autocomplete="off" required>
+									<span class="text-danger col-md-12 msg" ng-show="frm4.date2.$error.required && frm4.date2.$touched" >Please select a date </span>
+									<span class="text-danger col-md-12 msg" ng-show="frm4.date2.$touched && frm4.date2.$error.date">Not a valid date!</span>
+									<span class="text-danger col-md-12 msg" ng-show="frm4.date2.$touched && frm4.date2.$error.max">Date beyond range!</span>
+							 	
+								
+							</form>
+							<br>
+								<div class="col-md-2 col-md-offset-6">
+									<button type="button" class="btn btn-warning" ng-click="saveEditedTask(EditTaskObj.title)"> Save </button>
+									<br></br>
+								</div>
+								</div>
+							</div>
+					</div>
+					</div>
+				</div> 
+				<!-----------------EditTaskModal ends------------------------------------------------------------------>
+	</body>
+</html>
+<script>
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+    //ev.dataTransfer.setData("text1", value);
+	console.log("ev.target.id",ev.target.id);
+	//console.log("ev.target.name",value);
+}
+
+function drop(ev, state) {
+	console.log("state",state);
+	//console.log("UID from Div",value);
+    ev.preventDefault();
+    
+    var data = ev.dataTransfer.getData("text");
+    //var uid = ev.dataTransfer.getData("text1");
+    //console.log("UID from task",uid);
+    ev.target.appendChild(document.getElementById(data));
+    var xhr = new XMLHttpRequest();
+    var encoded_string = "http://localhost:8080/update/taskstatus?taskid="+ev.dataTransfer.getData("text")+"&status="+state ;
+    xhr.open('PUT', encoded_string, true);
+    xhr.onload = function () {
+    	  if (xhr.status === 200) {
+    	    console.log('all done: ' + xhr.status);
+    	  } else {
+    	    console.log('Something went terribly wrong...'+ xhr.status);
+    	  }
+    	};
+    xhr.send();
+    //sprintChanged();
+    angular.element(document.getElementById('main-container')).scope().sprintChanged();
+}
+</script>

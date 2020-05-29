@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd	
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+<tx:annotation-driven/>
+
+<bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
+<!--For MYSQL:  com.mysql.jdbc.Driver, jdbc:mysql://localhost:3306/photoalbum -->
+<bean id="dataSource" destroy-method="close" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<property name="driverClassName" value="org.hsqldb.jdbcDriver"/>
+	<property name="url" value="jdbc:hsqldb:mem:photoalbum"/>
+	<property name="username" value="sa"/>
+	<property name="password" value=""/>
+</bean>   
+
+<!-- Hibernate configuration -->
+<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+  <property name="dataSource" ref="dataSource"/>
+  <property name="annotatedClasses">
+	 <list>
+		<value>com.photo.entity.Album</value>
+		<value>com.photo.entity.Picture</value>		
+	 </list>
+  </property>
+  <property name="hibernateProperties">
+	 <props>
+		<prop key="hibernate.connection.pool_size">0</prop>
+		<prop key="hibernate.show_sql">true</prop>
+		<prop key="hibernate.format_sql">true</prop>
+		<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+		<prop key="hibernate.hbm2ddl.auto">create</prop>
+	 </props>
+  </property>
+</bean>
+
+<!-- DAO configurations -->   
+<bean id="albumDao" class="com.photo.dao.hibernate.HibernateAlbumDaoImpl">
+  <property name="sessionFactory" ref="sessionFactory"/>	  
+</bean>
+
+<bean id="pictureDao" class="com.photo.dao.hibernate.HibernatePictureDaoImpl">
+  <property name="sessionFactory" ref="sessionFactory"/>	  
+</bean>
+
+<!-- Transaction configuration    -->
+<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+  <property name="sessionFactory" ref="sessionFactory" />
+</bean>
+
+</beans>

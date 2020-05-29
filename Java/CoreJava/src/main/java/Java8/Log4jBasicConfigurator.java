@@ -1,4 +1,4 @@
-package Java8;
+package Corejava;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 

@@ -1,4 +1,4 @@
-package Java8;
+package Corejava;
 
 import java.util.ArrayList;
 

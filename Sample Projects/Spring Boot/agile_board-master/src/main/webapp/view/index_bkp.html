@@ -1,0 +1,142 @@
+<html ng-app="app">
+	<head>
+		<!------------ Style Sheet------------------------------->
+		<link href="./../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="./../bootstrap/css/custom.css" rel="stylesheet">
+		<script src="./../jquery.js"></script>
+		<script src="./../angular.min.js"></script>
+		<script src="./../ngDraggable.js"></script>
+		<script src="./../model/Model.js"></script>
+		<script src="./../controller/Controller.js"></script>
+		
+		<!---#eb8024--->
+	</head>
+	<body>
+		<!--------------Navbar start----------------------------->
+		<!-- Fixed navbar -->
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+		  <div class="container">
+			<div class="navbar-header">
+			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </button>
+			  <a class="navbar-brand" href="#">Virtual Scrumboard</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse pull-right">
+			  <ul class="nav navbar-nav">
+				<li><a href="">Welcome Shipra</a></li>
+			  </ul>
+			</div><!--/.nav-collapse -->
+		  </div>
+		</nav>
+		<!--------------Navbar closed----------------------------->
+		<!--------------Main Content Start------------------------>
+		<div class="container theme-showcase" role="main">
+			<div class="jumbotron" ng-controller="controller" ng-init="init()">
+				<!-------table start----------------------------->
+				<div class="page-header">
+					<h4>Scrumboard</h4>
+				</div>
+				<div class="row">
+					<div class="col-md-6 dropdown dropdown-scroll">
+						<select class="col-md-6" ng-model="ScrumList" ng-options="List as List.scrum for List in listItems">
+							<option value="">Select Scrum</option>
+						</select>
+					</div>
+					<div class="col-md-6">
+					<select class="col-md-6" ng-model="SelectedSprint">
+						<option value="">Select Sprint</option>
+						<option ng-repeat="(key,value) in ScrumList.ScrumStories" value="{{key}}">{{value.sprint}}</option>
+					</select>
+					</div>
+				</div>
+				<div class="row marginTop5px">
+					<div class="col-md-12" >
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="col-md-3">User Story</th>
+									<th class="col-md-3">Opened</th>
+									<th class="col-md-3">In Progress</th>	
+									<th class="col-md-3">Complete</th>	
+								</tr>
+							</thead>
+							<tbody>
+								<tr  ng-model="selectedSprintStory" ng-repeat="(key,value) in ScrumList.ScrumStories[SelectedSprint].SprintStories" ng-click="doneEditing($event)">
+									<td ng-dblclick="editTodo(value)" class="col-md-3">
+										<p>	
+											<span class="editable" ng-hide="value.editing">{{value.title}}</span>
+											<form ng-submit="doneEditing(value.editing)" ng-show="value.editing">
+												<input class="editable col-md-12" ng-model="value.title">
+											</form> 
+										</p>											
+									</td>
+									<td class="col-md-3">
+									<div>
+											<ul class="draggable-objects ulStyle">
+												<li class="liStyle" ng-repeat="(key,obj) in value.ScrumStory" ng-if="obj.Status == 'Opened'">
+												 	<div class="bg-danger text-danger padding5">
+														<div>{{obj.story}}
+															<button type="button" class="btn btn-xs btn-danger pull-right" aria-label="Left Align">
+																<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+															</button>
+														</div>
+														<div class="clearfix"></div>
+														<div class="border1Dotted">{{obj.description}} on {{obj.Date}}</div>
+														<div>{{obj.Owner}}</div>
+													</div>
+												</li>
+											</ul>
+										</div>
+									</td>
+									<td class="col-md-3">
+										<div>
+											<ul class="draggable-objects ulStyle">
+													<li class="liStyle" ng-repeat="(key,obj) in value.ScrumStory" ng-if="obj.Status == 'InProgress'">
+														<div class="bg-success text-success padding5">
+															<div>{{obj.story}}
+																<button type="button" class="btn btn-xs btn-danger pull-right" aria-label="Left Align">
+																	<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+																</button>
+															</div>
+															<div class="clearfix"></div>
+															<div class="border1Dotted">{{obj.description}} on {{obj.Date}}</div>
+															<div>{{obj.Owner}}</div>
+														</div>
+													</li>
+											</ul>
+										</div>
+									</td>
+									<td class="col-md-3">
+										<div>
+											<ul class="draggable-objects ulStyle">
+													<li class="liStyle" ng-repeat="obj in value.ScrumStory" ng-if="obj.Status == 'Complete'">
+														<div class="bg-info text-info padding5">
+															<div>{{obj.story}}
+																<button type="button" class="btn btn-xs btn-danger pull-right" aria-label="Left Align">
+																	<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+																</button>
+															</div>
+															<div class="clearfix"></div>
+															<div class="border1Dotted">{{obj.description}} on {{obj.Date}}</div>
+															<div>{{obj.Owner}}</div>
+														</div>
+													</li>
+											</ul>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			<!-----------------table ends-------------------------------->
+			</div>
+		</div>
+		<!--------------Main Content Ends------------------------>
+		<!--------------Footer------------------------------>
+	</body>
+</html>

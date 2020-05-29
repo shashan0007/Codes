@@ -1,0 +1,109 @@
+<html ng-app="Registration">
+	<head>
+		<!------------ Style Sheet------------------------------->
+		<link href="./../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="./../bootstrap/css/custom.css" rel="stylesheet">
+		<script src="./../jquery.js"></script>
+		<script src="./../angular.min.js"></script>
+		<script src="./../model/Model.js"></script>
+		<script src="./../controller/Registration.js"></script>
+		<script src='./../controller/api.js'></script>
+		<script src='https://www.google.com/recaptcha/api.js'></script>
+		<!---#eb8024--->
+	</head>
+	<body>
+		<!--------------Navbar start----------------------------->
+		<!-- Fixed navbar -->
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+		  <div class="container">
+			<div class="navbar-header">
+			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </button>
+			  <a class="navbar-brand" href="#">Virtual Scrumboard</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse pull-right">
+			  <ul class="nav navbar-nav">
+				<!--<li class="active"><a href="#">Home</a></li>
+				<li class="active"><a href="#about" >About</a></li>--->
+			  </ul>
+			</div><!--/.nav-collapse -->
+		  </div>
+		</nav>
+		<!--------------Navbar closed----------------------------->
+		<!--------------Main Content Start------------------------>
+		<div class="container theme-showcase" role="main">
+			<div class="jumbotron">
+				<!-------table start----------------------------->
+			
+					<div class="panel panel-default col-md-5 col-md-offset-3 marginTop10 padding0">
+						  <div class="panel-heading">Registration</div>
+						  <div class="panel-body padding50">
+							 <!-- Form Begins-->
+					<!--Code of form started-->
+                    <form class="form-horizontal" name="frm" novalidate ng-controller="Registration">
+                        <!--Code to validate first name is written here-->
+						<div class="form-group" >
+                            <label id="label" class="control-label">First Name:</label>
+                            <input type="text" class="form-control" name="username" ng-model="user.firstname" placeholder="Enter First Name" autocomplete="off" required />
+                        	<span class="msg" ng-show="frm.username.$dirty && frm.username.$invalid">Enter first name</span>
+                        </div>
+                        
+                         <!--Code to validate first name is written here-->
+						<div class="form-group" >
+                            <label id="label" class="control-label">Last Name:</label>
+                            <input type="text" class="form-control" name="lastname" ng-model="user.lastname" placeholder="Enter Last Name" autocomplete="off" required />
+                        	<span class="msg" ng-show="frm.lastname.$dirty && frm.lastname.$invalid">Enter last name</span>
+                        </div>
+                        
+						<!--Code to validate email address is written here-->
+                        <div class="form-group">
+                            <label id="label" class="control-label">Email:</label>
+                            <input type="email" class="form-control" ng-model="user.email" name="email" placeholder="Enter Email Address" autocomplete="off" required>
+                            <span class="msg" ng-show="frm.email.$dirty && frm.email.$invalid">Email Address is not valid</span>
+                        </div>
+						<!--Code to validate password is written here-->
+                        <div class="form-group">
+                            <label id="label" class="control-label">Password:</label>
+                            <input type="password" class="form-control" ng-model="user.pass" name="pass" placeholder="Enter Password" autocomplete="off" ng-minlength="5" ng-maxlength="12" required>
+                            <span class="msg" ng-show="frm.pass.$dirty && frm.pass.$error.minlength">password must contain atleast 5 characters</span>
+                            <span class="msg" ng-show="frm.pass.$dirty && frm.pass.$error.maxlength">max-length of password reached</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label id="label" class="control-label">Confirm Password:</label>
+                            <input type="password" class="form-control" ng-model="user.confirmpass" name="confirmpass" placeholder="Confirm password" autocomplete="off" ng-minlength="5" ng-maxlength="12" required>
+                            <span class="msg" ng-show="frm.confirmpass.$dirty && frm.confirmpass.$error.minlength">password must contain atleast 5 characters</span>
+                            <span class="msg" ng-show="frm.confirmpass.$dirty && frm.confirmpass.$error.maxlength">max-length of password reached</span>
+                        </div>
+                        
+						<!--Code to validate phoneno. input box-->
+                        <div class="form-group">
+                            <label id="label" class="control-label">Phone Number:</label>
+                            <input type="text" class="form-control" ng-model="user.message" name="message" placeholder="Enter Password" ng-minlength="10" ng-maxlength="10" required>
+                            <span class="msg" ng-show="frm.message.$error.required && frm.message.$error.untouched">Enter phone number</span>
+                            <span class="msg" ng-show="frm.message.$dirty && frm.message.$error.minlength">Please enter valid 10 digit number </span>
+                            <span class="msg" ng-show="frm.message.$dirty && frm.message.$error.maxlength">max-length of password reached</span>
+                        </div>
+                        
+                        <div class="g-recaptcha col-sm-5" th:attr="data-sitekey=${@captchaSettings.getSite()}"></div>
+        					<span id="captchaError" class="alert alert-danger col-sm-4" style="display:none"></span>
+						
+						<!--Code to disable submit button is written here-->
+                        <div class="form-group">
+                            <input ng-disabled="frm.$invalid" class="btn btn-warning" type="submit" ng-click="call()" value="Submit">
+                        </div>
+                    </form>
+						  </div>
+					</div>
+				</div>
+			<!-----------------table ends-------------------------------->
+			</div>
+		</div>
+		<!--------------Main Content Ends------------------------>
+		<!--------------Footer------------------------------>
+	</body>
+</html>

@@ -1,0 +1,3 @@
+com\hibernate\model\Employee.class
+com\hibernate\util\HibernateUtil.class
+com\hibernate\main\AddEmployee.class

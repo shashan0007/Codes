@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/context
+    	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	
+	<context:component-scan base-package="ashish.examples.spring.springAOP.main" />
+	<context:annotation-config />
+	
+	<bean id="Employee" class="ashish.examples.spring.springAOP.model.Employee">
+		<property name="name" value="Aashvi Singh"></property>
+	</bean>
+	
+	<bean id="EmployeeService" class="ashish.examples.spring.springAOP.service.EmployeeService">
+		<property name="employee" ref="Employee"></property>
+	</bean>
+	
+	<bean id="BeforeAdvice" class="ashish.examples.spring.springAOP.aspect.EmployeeBeforeAspect"></bean>
+	<bean id="AfterAdvice" class="ashish.examples.spring.springAOP.aspect.EmployeeAfterAspect"></bean>
+	<bean id="AroundAdvice" class="ashish.examples.spring.springAOP.aspect.EmployeeAroundAspect"></bean>
+	<bean id="ExceptionAdvice" class="ashish.examples.spring.springAOP.aspect.EmployeeServiceExceptionAspect"></bean>
+		
+	<aop:config>
+		<aop:aspect ref="BeforeAdvice" id="AOPConfigBefore" order="1">
+			<aop:pointcut expression="execution(* ashish.examples.spring.springAOP.model.Employee.get*())" id="employeeBeforePointCut"/>
+			<aop:before pointcut-ref="employeeBeforePointCut" method="beforeSettingEmployeeName" arg-names="joint"/>
+		</aop:aspect>
+	
+		<aop:aspect ref="AfterAdvice" id="AOPConfigAfter" order="2">
+			<aop:pointcut expression="execution(* ashish.examples.spring.springAOP.model.Employee.set*(*))" id="employeeAfterPointCut"/>
+			<aop:after method="afterSettingEmployeeName" pointcut-ref="employeeAfterPointCut" arg-names="joint"/>
+		</aop:aspect>
+	</aop:config>
+	
+</beans>
