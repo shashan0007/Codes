@@ -1,1 +1,1 @@
-# Repository location for practice codes #
+# Legacy Repository location for practice codes and sample projects #
